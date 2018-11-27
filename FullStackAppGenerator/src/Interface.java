@@ -6,26 +6,26 @@ public class Interface {
 	public static void main(String[] args) {
 
 		Scanner scan = new Scanner(System.in);
-		// String frontEnd = "";
-		// String backEnd = "";
-		// String database = "";
+		String frontEnd = "";
+		String backEnd = "";
+		String database = "";
 
 		System.out.println("Here we will be getting types and requirements from user.\n");
 
-		// System.out.println("Would you like a Python or ExpressJS front end: ");
-		// frontEnd = scan.nextLine();
-		//
-		// System.out.println("Would you like a NodeJS or FlaskJS back end: ");
-		// backEnd = scan.nextLine();
-		//
-		// System.out.println("Would you like a Python or ExpressJS database: ");
-		// database = scan.nextLine();
+		System.out.println("Would you like a Python or ExpressJS front end: ");
+		frontEnd = scan.nextLine();
+		
+		System.out.println("Would you like a NodeJS or FlaskJS back end: ");
+		backEnd = scan.nextLine();
+		
+		System.out.println("Would you like a SQLAlchemy or MongoDB database: ");
+		database = scan.nextLine();
 
 		try{
-			// ProjectGenerator pg = new ProjectGenerator(frontEnd, backEnd, database);
-			ProjectGenerator pg = new ProjectGenerator("ExpressJS", "NodeJS", "MongoDB");
-
+			
+			ProjectGenerator pg = new ProjectGenerator(frontEnd, backEnd, database);
 			pg.generate();
+			
 		} catch(IOException ex){
 			System.out.println(ex);
 
