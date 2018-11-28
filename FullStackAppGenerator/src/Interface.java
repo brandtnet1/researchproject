@@ -26,9 +26,10 @@ public class Interface {
 			ProjectGenerator pg = new ProjectGenerator(frontEnd, backEnd, database);
 			pg.generate();
 			
+			FileEditor editor = new FileEditor();
+			
 		} catch(IOException ex){
 			System.out.println(ex);
-
 		}
 
 		// System.out.println("Once we get requirements we will create a 'project' object "
