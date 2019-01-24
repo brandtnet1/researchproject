@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.ProcessBuilder;
 import java.util.ArrayList;
-import java.util.ArrayList;
 
 public class ProjectGenerator {
 
@@ -13,11 +12,8 @@ public class ProjectGenerator {
 	private String backEnd;
 	private String database;
 	
-	private String endings[];
-	
 	private ArrayList<String> commands = new ArrayList<String>();
-	private ArrayList<String []> fileEndings = new ArrayList<String []>();
-	
+
     private ProcessBuilder pb;
 	private Process p;
 
@@ -31,19 +27,25 @@ public class ProjectGenerator {
 
 	protected void generate() throws IOException {
 		
+		File dir = new File("../../.");
+		File[] filesList = dir.listFiles();
+		for (File file : filesList) {
+			if(file.getName().equals("webapp")){
+				boolean result = deleteDirectory(new File("../../webapp"));
+				if(result) break;
+			}
+		}
+		
 		File webapp = new File("../../webapp");
 		webapp.mkdir();
 
 		if(frontEnd.toLowerCase().contains("express")) {
 			
-			endings = new String[] { ".js", ".jade" };
-			fileEndings.add(endings);
-			
 			commands.add("express"); commands.add("app");
 		 	buildProcess(commands, "../../webapp");
 
 			commands.clear();
-			wait(2000);
+			wait(10000);
 			
 			commands.add("npm"); commands.add("install");
 			buildProcess(commands, "../../webapp/app");
@@ -68,9 +70,6 @@ public class ProjectGenerator {
 			buildProcess(commands, "../../webapp/app");
 		
 		} else {
-			
-			endings = new String[] { ".py", ".html" };
-			fileEndings.add(endings);
 
 			File config = new File("../../webapp/config.py");
 			config.createNewFile();
@@ -87,7 +86,7 @@ public class ProjectGenerator {
 			models.createNewFile();
 			File routes = new File("../../webapp/app/routes.py");
 			routes.createNewFile();
-			File templates = new File("../../webapp/templates");
+			File templates = new File("../../webapp/app/templates");
 			templates.mkdir();
 
 		}
@@ -125,7 +124,17 @@ public class ProjectGenerator {
 		}
 	}
 	
-	static boolean isWindows() {
+	private static boolean isWindows() {
     	return System.getProperty("os.name").toLowerCase().contains("win");
+	}
+	
+	private boolean deleteDirectory(File directoryToBeDeleted) {
+	    File[] allContents = directoryToBeDeleted.listFiles();
+	    if (allContents != null) {
+	        for (File file : allContents) {
+	            deleteDirectory(file);
+	        }
+	    }
+	    return directoryToBeDeleted.delete();
 	}
 }

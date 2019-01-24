@@ -1,40 +1,59 @@
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Interface {
 
 	public static void main(String[] args) {
 
 		Scanner scan = new Scanner(System.in);
-		String frontEnd = "";
-		String backEnd = "";
-		String database = "";
+		
+		ArrayList<String> routes = new ArrayList<String>();
+		String fileExtensions[] = new String[2];
+
+		String routeString;
+		String frontEnd;
+		String backEnd;
+		String database;
 
 		System.out.println("Here we will be getting types and requirements from user.\n");
 
-		System.out.println("Would you like a Python or ExpressJS front end: ");
-		frontEnd = scan.nextLine();
+		System.out.println("1 for Python/Flask, 2 for Express/NodeJS ");
+		int selection = scan.nextInt();
 		
-		System.out.println("Would you like a NodeJS or FlaskJS back end: ");
-		backEnd = scan.nextLine();
+		if(selection == 1){
+			frontEnd = "Python";
+			backEnd = "Flask";
+			database = "SqlAlchemy";
+		} else {
+			frontEnd = "ExpressJS";
+			backEnd = "NodeJS";
+			database = "MongoDB";
+		}
 		
-		System.out.println("Would you like a SQLAlchemy or MongoDB database: ");
-		database = scan.nextLine();
 
-		try{
-			
+		try {
 			ProjectGenerator pg = new ProjectGenerator(frontEnd, backEnd, database);
 			pg.generate();
 			
-			FileEditor editor = new FileEditor();
-			
+			fileExtensions[0] = frontEnd.toLowerCase().contains("express") ? ".js" : ".py";
+			fileExtensions[1] = backEnd.toLowerCase().contains("node") ? ".jade" : ".html";
 		} catch(IOException ex){
 			System.out.println(ex);
 		}
+		
+		// System.out.println("Specify which routes you'd like for your webapp: (Seperate each with a ',') ");
+		// routeString = scan.nextLine();
+		
+		routes.add("home");
+		routes.add("login");
+		routes.add("register");
+		routes.add("logout");
+		
+		FileEditor editor = new FileEditor(routes, fileExtensions);
+					
 
-		// System.out.println("Once we get requirements we will create a 'project' object "
-		// 		+ "which will stand in as our intermin full stack appliction");
-		//
 		// System.out.println("The list of requirements and the project object will be passed "
 		// 		+ "into a 'compiler' or sorts which will create the routes, pages and necessary logic");
 		//
@@ -44,7 +63,5 @@ public class Interface {
 		// System.out.println("Project will be tested 'WORK IN PROGRESS'");
 		//
 		// System.out.println("Project will be spit out into your github");
-
 	}
-
 }
