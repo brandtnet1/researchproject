@@ -30,6 +30,14 @@ public class FileEditor {
 		    
 		} else {
 			
+			writeAppJS();
+			writeUsersJS();
+			writeIndexJS();
+			writeAuthControllerJS();
+			writeLayoutJade();
+			writeLoginJade();
+			writeRegisterJade();
+			
 		}
 
 
@@ -286,6 +294,162 @@ public class FileEditor {
 		appendToFile("../../webapp/app/templates/register.html", "    <p>{{ form.submit() }}</p>");
 		appendToFile("../../webapp/app/templates/register.html", "  </form>");
 		appendToFile("../../webapp/app/templates/register.html", "{% endblock %}");
+	}
+	
+	protected void writeAppJS() {
+		appendToFile("../../webapp/app/app.js", "var mongoose = require('mongoose');");
+		appendToFile("../../webapp/app/app.js", "mongoose.Promise = global.Promise;");
+		appendToFile("../../webapp/app/app.js", "mongoose.connect('mongodb://localhost/node-auth').then(() => console.log('connection successful')).catch((err) => console.error(err));");
+		appendToFile("../../webapp/app/app.js", "var passport = require('passport');");
+		appendToFile("../../webapp/app/app.js", "var LocalStrategy = require('passport-local').Strategy;");
+		
+		appendToFile("../../webapp/app/app.js", "app.use(require('express-session')({");
+		appendToFile("../../webapp/app/app.js", "    secret: 'keyboard cat',");
+		appendToFile("../../webapp/app/app.js", "    resave: false,");
+		appendToFile("../../webapp/app/app.js", "    saveUninitialized: false");
+		appendToFile("../../webapp/app/app.js", "}));");
+		appendToFile("../../webapp/app/app.js", "app.use(passport.initialize());");
+		appendToFile("../../webapp/app/app.js", "app.use(passport.session());");
+		
+		appendToFile("../../webapp/app/app.js", "var User = require('./models/User');");
+		appendToFile("../../webapp/app/app.js", "passport.use(new LocalStrategy(User.authenticate()));");
+		appendToFile("../../webapp/app/app.js", "passport.serializeUser(User.serializeUser());");
+		appendToFile("../../webapp/app/app.js", "passport.deserializeUser(User.deserializeUser());");
+	}
+	
+	protected void writeUsersJS() {
+		
+		File models = new File("../../webapp/app/models");
+		models.mkdir();
+		File usermodels = new File("../../webapp/app/models/User.js");
+		
+		appendToFile("../../webapp/app/models/User.js", "var mongoose = require('mongoose');");
+		appendToFile("../../webapp/app/models/User.js", "var Schema = mongoose.Schema;");
+		appendToFile("../../webapp/app/models/User.js", "var passportLocalMongoose = require('passport-local-mongoose');");
+		appendToFile("../../webapp/app/models/User.js", "var UserSchema = new Schema({ username: String, password: String });");
+		appendToFile("../../webapp/app/models/User.js", "UserSchema.plugin(passportLocalMongoose);");
+		appendToFile("../../webapp/app/models/User.js", "module.exports = mongoose.model('User', UserSchema);");
+	}
+	
+	protected void writeIndexJS() {
+		File index = new File("../../webapp/app/routes/index.js");
+		index.delete();
+		index = new File("../../webapp/app/routes/index.js");
+		
+		appendToFile("../../webapp/app/routes/index.js", "var express = require('express');");
+		appendToFile("../../webapp/app/routes/index.js", "var router = express.Router();");
+		appendToFile("../../webapp/app/routes/index.js", "var auth = require('../controllers/AuthController.js');");
+		
+		appendToFile("../../webapp/app/routes/index.js", "router.get('/', auth.home);");
+		
+		appendToFile("../../webapp/app/routes/index.js", "router.get('/register', auth.register);");
+		appendToFile("../../webapp/app/routes/index.js", "router.post('/register', auth.doRegister);");
+		
+		appendToFile("../../webapp/app/routes/index.js", "router.get('/login', auth.login);");
+		appendToFile("../../webapp/app/routes/index.js", "router.post('/login', auth.doLogin);");
+		
+		appendToFile("../../webapp/app/routes/index.js", "router.get('/logout', auth.logout);");
+		
+		appendToFile("../../webapp/app/routes/index.js", "module.exports = router;");
+	}
+	
+	protected void writeAuthControllerJS() {
+		File controllers = new File("../../webapp/app/controllers");
+		controllers.mkdir();
+		File authcontroller = new File("../../webapp/app/controllers/AuthController.js");
+		
+		appendToFile("../../webapp/app/controllers/AuthController.js", "var mongoose = require('mongoose');");
+		appendToFile("../../webapp/app/controllers/AuthController.js", "var passport = require('passport');");
+		appendToFile("../../webapp/app/controllers/AuthController.js", "var User = require('../models/User');");
+		appendToFile("../../webapp/app/controllers/AuthController.js", "var userController = {};");
+		
+		appendToFile("../../webapp/app/controllers/AuthController.js", "userController.home = function(req, res) { res.render('index', { user : req.user }); };");
+		appendToFile("../../webapp/app/controllers/AuthController.js", "userController.register = function(req, res) { res.render('register') };");
+		
+		appendToFile("../../webapp/app/controllers/AuthController.js", "userController.doRegister = function(req, res) { ");
+		appendToFile("../../webapp/app/controllers/AuthController.js", "  User.register(new User({ username : req.body.username, name : req.body.name }), req.body.password, function(err, user) {");
+		appendToFile("../../webapp/app/controllers/AuthController.js", "    if (err) {");
+		appendToFile("../../webapp/app/controllers/AuthController.js", "      return res.render('register', { user : user });");
+		appendToFile("../../webapp/app/controllers/AuthController.js", "    }");
+		appendToFile("../../webapp/app/controllers/AuthController.js", "    passport.authenticate('local')(req, res, function() {");
+		appendToFile("../../webapp/app/controllers/AuthController.js", "      res.redirect('/');");
+		appendToFile("../../webapp/app/controllers/AuthController.js", "    });");
+		appendToFile("../../webapp/app/controllers/AuthController.js", "  });");
+		appendToFile("../../webapp/app/controllers/AuthController.js", "};");
+		
+		appendToFile("../../webapp/app/controllers/AuthController.js", "userController.login = function(req, res) { res.render('login') };");
+		
+		appendToFile("../../webapp/app/controllers/AuthController.js", "userController.doLogin = function(req, res) { ");
+		appendToFile("../../webapp/app/controllers/AuthController.js", "  passport.authenticate('local')(req, res, function() {");
+		appendToFile("../../webapp/app/controllers/AuthController.js", "    res.render('index', { user : res.req.user });");
+		appendToFile("../../webapp/app/controllers/AuthController.js", "  });");
+		appendToFile("../../webapp/app/controllers/AuthController.js", "};");
+		
+		appendToFile("../../webapp/app/controllers/AuthController.js", "userController.logout = function(req, res) { req.logout; res.redirect('/') };");
+		
+		appendToFile("../../webapp/app/controllers/AuthController.js", "module.exports = userController;");
+	}
+	
+	protected void writeLayoutJade() {
+		
+		File layout = new File("../../webapp/app/views/layout.jade");
+		layout.delete();
+		layout = new File("../../webapp/app/views/layout.jade");
+		
+		appendToFile("../../webapp/app/views/layout.jade", "doctype html");
+		appendToFile("../../webapp/app/views/layout.jade", "html");
+		appendToFile("../../webapp/app/views/layout.jade", "  head");
+		appendToFile("../../webapp/app/views/layout.jade", "    title Test Site");
+		appendToFile("../../webapp/app/views/layout.jade", "  body");
+		appendToFile("../../webapp/app/views/layout.jade", "    div");
+		appendToFile("../../webapp/app/views/layout.jade", "      h1 Test Site:");
+		appendToFile("../../webapp/app/views/layout.jade", "      a(href='/') Home");
+		
+		appendToFile("../../webapp/app/views/layout.jade", "      if(!user)");
+		appendToFile("../../webapp/app/views/layout.jade", "        a(href='/login') Login");
+		appendToFile("../../webapp/app/views/layout.jade", "        a(href='/register') Register");
+		
+		appendToFile("../../webapp/app/views/layout.jade", "      if(user)");
+		appendToFile("../../webapp/app/views/layout.jade", "        a(href='/logout') logout");
+		
+		appendToFile("../../webapp/app/views/layout.jade", "      #[br]");
+		appendToFile("../../webapp/app/views/layout.jade", "      h1 Welcome #{user.username}");
+		
+		appendToFile("../../webapp/app/views/layout.jade", "    div.container");
+		appendToFile("../../webapp/app/views/layout.jade", "      div.content");
+		appendToFile("../../webapp/app/views/layout.jade", "        block content");
+	}
+	
+	protected void writeLoginJade() {
+		
+		File layout = new File("../../webapp/app/views/login.jade");
+
+		appendToFile("../../webapp/app/views/layout.jade", "extends layout");
+		appendToFile("../../webapp/app/views/layout.jade", "block content");
+		appendToFile("../../webapp/app/views/layout.jade", "  .container");
+		appendToFile("../../webapp/app/views/layout.jade", "    form.form-signin(role='form', action='/login', method='post')");
+		appendToFile("../../webapp/app/views/layout.jade", "      h2.form-signin-heading Please sign in");
+		appendToFile("../../webapp/app/views/layout.jade", "      label.sr-only(for='inputEmail')");
+		appendToFile("../../webapp/app/views/layout.jade", "      input.form-control(type='text', name='username', id='inputEmail', placeholder='Username', required, autofocus)");
+		appendToFile("../../webapp/app/views/layout.jade", "      input.form-control(type='password', name='password', id='inputPassword', placeholder='Password')");
+		appendToFile("../../webapp/app/views/layout.jade", "      button.btn.btn-lg.btn-primary.btn-block(type='submit') LOGIN");
+		
+	}
+	
+	protected void writeRegisterJade() {
+		
+		File layout = new File("../../webapp/app/views/register.jade");
+
+		appendToFile("../../webapp/app/views/register.jade", "extends layout");
+		appendToFile("../../webapp/app/views/register.jade", "block content");
+		appendToFile("../../webapp/app/views/register.jade", "  .container");
+		appendToFile("../../webapp/app/views/register.jade", "    form.form-signin(role='form', action='/register', method='post', style='max-width: 300px;')");
+		appendToFile("../../webapp/app/views/register.jade", "      h2.form-signin-heading Sign up here");
+		appendToFile("../../webapp/app/views/register.jade", "      input.form-control(type='text', name='name', placeholder='Your Name')");
+		appendToFile("../../webapp/app/views/register.jade", "      input.form-control(type='text', name='username', placeholder='Your Username')");
+		appendToFile("../../webapp/app/views/register.jade", "      input.form-control(type='password', name='password', placeholder='Your Password')");
+		appendToFile("../../webapp/app/views/register.jade", "      button.btn.btn-lg.btn-primary.btn-block(type='submit') Sign Up");
+		
 	}
 	
 	protected String getFilePath(String fileName) {

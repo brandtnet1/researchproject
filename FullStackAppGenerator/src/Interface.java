@@ -43,15 +43,12 @@ public class Interface {
 			System.out.println(ex);
 		}
 		
-		// System.out.println("Specify which routes you'd like for your webapp: (Seperate each with a ',') ");
-		// routeString = scan.nextLine();
-		
 		routes.add("home");
 		routes.add("login");
 		routes.add("register");
 		routes.add("logout");
 		
-		FileEditor editor = new FileEditor(routes, fileExtensions);
+		FileEditor editor = new FileEditor(selection);
 					
 
 		// System.out.println("The list of requirements and the project object will be passed "

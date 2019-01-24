@@ -45,7 +45,7 @@ public class ProjectGenerator {
 		 	buildProcess(commands, "../../webapp");
 
 			commands.clear();
-			wait(10000);
+			wait(2000);
 			
 			commands.add("npm"); commands.add("install");
 			buildProcess(commands, "../../webapp/app");
