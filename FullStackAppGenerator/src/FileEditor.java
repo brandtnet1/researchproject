@@ -62,6 +62,7 @@ public class FileEditor {
 		appendToFile("../../webapp/site.py", "def make_shell_context_processor():");
 		appendToFile("../../webapp/site.py", "    return {'db':db, 'User': User}");
 		
+		appendToFile("../../webapp/site.py", "db.create_all()");
 		appendToFile("../../webapp/site.py", "app.run(host='0.0.0.0', port=8080, debug=True)");
 	}
 	
@@ -405,15 +406,13 @@ public class FileEditor {
 		appendToFile("../../webapp/app/views/layout.jade", "      h1 Test Site:");
 		appendToFile("../../webapp/app/views/layout.jade", "      a(href='/') Home");
 		
-		appendToFile("../../webapp/app/views/layout.jade", "      if(!user)");
+		appendToFile("../../webapp/app/views/layout.jade", "      if (!user)");
 		appendToFile("../../webapp/app/views/layout.jade", "        a(href='/login') Login");
 		appendToFile("../../webapp/app/views/layout.jade", "        a(href='/register') Register");
 		
-		appendToFile("../../webapp/app/views/layout.jade", "      if(user)");
+		appendToFile("../../webapp/app/views/layout.jade", "      if (user)");
 		appendToFile("../../webapp/app/views/layout.jade", "        a(href='/logout') logout");
-		
-		appendToFile("../../webapp/app/views/layout.jade", "      #[br]");
-		appendToFile("../../webapp/app/views/layout.jade", "      h1 Welcome #{user.username}");
+		appendToFile("../../webapp/app/views/layout.jade", "        h1 Welcome #{user.username}");
 		
 		appendToFile("../../webapp/app/views/layout.jade", "    div.container");
 		appendToFile("../../webapp/app/views/layout.jade", "      div.content");
@@ -424,15 +423,15 @@ public class FileEditor {
 		
 		File layout = new File("../../webapp/app/views/login.jade");
 
-		appendToFile("../../webapp/app/views/layout.jade", "extends layout");
-		appendToFile("../../webapp/app/views/layout.jade", "block content");
-		appendToFile("../../webapp/app/views/layout.jade", "  .container");
-		appendToFile("../../webapp/app/views/layout.jade", "    form.form-signin(role='form', action='/login', method='post')");
-		appendToFile("../../webapp/app/views/layout.jade", "      h2.form-signin-heading Please sign in");
-		appendToFile("../../webapp/app/views/layout.jade", "      label.sr-only(for='inputEmail')");
-		appendToFile("../../webapp/app/views/layout.jade", "      input.form-control(type='text', name='username', id='inputEmail', placeholder='Username', required, autofocus)");
-		appendToFile("../../webapp/app/views/layout.jade", "      input.form-control(type='password', name='password', id='inputPassword', placeholder='Password')");
-		appendToFile("../../webapp/app/views/layout.jade", "      button.btn.btn-lg.btn-primary.btn-block(type='submit') LOGIN");
+		appendToFile("../../webapp/app/views/login.jade", "extends layout");
+		appendToFile("../../webapp/app/views/login.jade", "block content");
+		appendToFile("../../webapp/app/views/login.jade", "  .container");
+		appendToFile("../../webapp/app/views/login.jade", "    form.form-signin(role='form', action='/login', method='post')");
+		appendToFile("../../webapp/app/views/login.jade", "      h2.form-signin-heading Please sign in");
+		appendToFile("../../webapp/app/views/login.jade", "      label.sr-only(for='inputEmail')");
+		appendToFile("../../webapp/app/views/login.jade", "      input.form-control(type='text', name='username', id='inputEmail', placeholder='Username', required, autofocus)");
+		appendToFile("../../webapp/app/views/login.jade", "      input.form-control(type='password', name='password', id='inputPassword', placeholder='Password')");
+		appendToFile("../../webapp/app/views/login.jade", "      button.btn.btn-lg.btn-primary.btn-block(type='submit') LOGIN");
 		
 	}
 	
