@@ -4,10 +4,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import java.io.IOException;
 
+// ./gradlew bootRun
+
 @RestController
 public class HelloController {
     
     ProjectGenerator pg;
+    FileEditor fe;
 
     @RequestMapping("/index")
     public String index() {
@@ -19,6 +22,7 @@ public class HelloController {
         try {
             pg = new ProjectGenerator("Python", "Flask", "SQLAlchemy");
             pg.generate();
+            fe = new FileEditor(1);
         } catch(IOException ex){
 			System.out.println(ex);
 		}
@@ -32,6 +36,7 @@ public class HelloController {
         try {
             pg = new ProjectGenerator("ExpressJS", "NodeJS", "MongoDB");
             pg.generate();
+            fe = new FileEditor(2);
         } catch(IOException ex){
 			System.out.println(ex);
 		}
